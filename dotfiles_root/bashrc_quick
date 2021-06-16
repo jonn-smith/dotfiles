@@ -1,0 +1,34 @@
+#\[\033[40m\]
+#Prompt formatting:
+export PS1="\[\e]0;\w\a\]\n\[\e[0;36m\]\u\[\e[0;31m\]@\[\e[0;35m\]\h \[\e[0;33m\]\w\n\[\e[0;32m\]\$\[\e[0;0m\] "
+
+#Set the term to be something good.
+export TERM=xterm;
+
+#Needed for directories to be visible:
+#See: http://linux-sxs.org/housekeeping/lscolors.html
+export LS_COLORS='no=00:fi=00:di=00;94:ln=00;36:pi=40;33:so=00;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=00;32:*.cmd=00;32:*.exe=00;32:*.com=00;32:*.btm=00;32:*.bat=00;32:*.sh=00;32:*.csh=00;32:*.tar=00;31:*.tgz=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.zip=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.bz2=00;31:*.bz=00;31:*.tz=00;31:*.rpm=00;31:*.cpio=00;31:*.jpg=00;35:*.gif=00;35:*.bmp=00;35:*.xbm=00;35:*.xpm=00;35:*.png=00;35:*.tif=00;35:'
+
+export VEGS_DIR='/proj/vader/staff/jsmith/xws/vegs'
+
+##History Path Variables:
+export HISTCONTROL=ignoredups
+export HISTSIZE=5000
+export HISTFILESIZE=10000000
+export HISTTIMEFORMAT='%x::%X  ' 
+
+export EDITOR=vim
+
+alias ls='ls -F --color';
+
+function tidyxml () {
+
+  if [[ $# == 0 ]] ; then
+    xmllint --format -
+  else
+    xmllint --format $1
+  fi
+}
+function getports {
+  netstat -lean | grep -v "^Proto" |  grep -v '^Active' | grep -v '^unix' | awk '{print $4}' | sed 's#.*:##g' | sort -n | uniq
+}

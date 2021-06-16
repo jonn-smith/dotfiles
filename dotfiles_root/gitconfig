@@ -1,0 +1,43 @@
+[push]
+	default = upstream
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[pull]
+	rebase = true
+[secrets]
+	providers = git secrets --aws-provider
+	patterns = (A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}
+	patterns = (\"|')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)(\"|')?\\s*(:|=>|=)\\s*(\"|')?[A-Za-z0-9/\\+=]{40}(\"|')?
+	patterns = (\"|')?(AWS|aws|Aws)?_?(ACCOUNT|account|Account)_?(ID|id|Id)?(\"|')?\\s*(:|=>|=)\\s*(\"|')?[0-9]{4}\\-?[0-9]{4}\\-?[0-9]{4}(\"|')?
+	allowed = AKIAIOSFODNN7EXAMPLE
+	allowed = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+	patterns = (xox[p|b|o|a]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-z0-9]{32})
+	patterns = [-]----BEGIN\\sRSA\\sPRIVATE\\sKEY-----
+	patterns = [-]----BEGIN\\sDSA\\sPRIVATE\\sKEY-----
+	patterns = [-]----BEGIN\\sEC\\sPRIVATE\\sKEY-----
+	patterns = [-]----BEGIN\\sPGP\\sPRIVATE\\sKEY\\sBLOCK-----
+	patterns = [f|F][a|A][c|C][e|E][b|B][o|O][o|O][k|K].*['|\"][0-9a-f]{32}['|\"]
+	patterns = [g|G][i|I][t|T][h|H][u|U][b|B].*['|\"][0-9a-zA-Z]{35,40}['|\"]
+	patterns = AIza[_0-9A-Za-z-]{35}
+	patterns = (\"type\":\\s\"service_account\"|\"privateKeyType\":\\s\"TYPE_GOOGLE_CREDENTIALS_FILE\",)
+	patterns = ya29\\.[_0-9A-Za-z-]+
+	patterns = [h|H][e|E][r|R][o|O][k|K][u|U].*[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}
+	patterns = sk_live_[0-9a-z]{32}
+	patterns = https://hooks.slack.com/services/T_0-9A-Za-z{8}/B_0-9A-Za-z{8}/_0-9A-Za-z{24}
+	patterns = sk_live_[0-9a-zA-Z]{24}
+	patterns = rk_live_[0-9a-zA-Z]{24}
+	patterns = sq0atp-[_0-9A-Za-z-]{22}
+	patterns = sq0csp-[_0-9A-Za-z-]{43}
+	patterns = SK[0-9a-fA-F]{32}
+	patterns = [t|T][w|W][i|I][t|T][t|T][e|E][r|R].*[1-9][0-9]+-[0-9a-zA-Z]{40}
+	patterns = [t|T][w|W][i|I][t|T][t|T][e|E][r|R].*['|\"][0-9a-zA-Z]{35,44}['|\"]
+[filesystem "Oracle Corporation|1.8.0_131|/dev/disk1s1"]
+	timestampResolution = 1001 milliseconds
+	minRacyThreshold = 0 nanoseconds

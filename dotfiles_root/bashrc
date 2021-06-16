@@ -1,0 +1,98 @@
+#!/bin/bash
+
+###############################################################################
+###############################################################################
+## Override to make sure that this only runs when it needs to.
+## If not running interactively, don't do anything
+[[ "$-" != *i* ]] && return
+###############################################################################
+
+# Simple message to let the user know things are happening:
+echo "Logging in..."
+
+# Store indent level here so we can have pretty printed info:
+indent="  "
+
+###############################################################################
+##
+## Global Settings: 
+##
+###############################################################################
+
+# Source global definitions
+echo "${indent}Sourcing global bashrc"
+if [ -f /etc/bashrc ]; then
+	 . /etc/bashrc
+fi
+
+###############################################################################
+##
+## Setup fuctions:
+##
+###############################################################################
+
+function sourceFiles()
+{
+  local f
+  local scriptDir=$1
+  if [[ -d ${scriptDir} ]] ; then
+    for f in $( find ${scriptDir} -maxdepth 1 -type f -name \*.sh ) ; do
+      source ${f}
+    done
+
+    for f in $( find ${scriptDir} -maxdepth 1 -type f -name \*.bash ) ; do
+      source ${f}
+    done
+  fi
+}
+
+###############################################################################
+##
+## Configure Bash settings dir: 
+##
+###############################################################################
+
+SETTINGS_DIR='~/.dotfiles_root'
+BASH_DIR="${SETTINGS_DIR//'~'/$HOME}"
+
+###############################################################################
+##
+## Source our components:
+##
+###############################################################################
+
+echo "${indent}Sourcing variables"
+source ${BASH_DIR}/VARIABLES.sh
+
+echo "${indent}Sourcing login commands"
+source ${BASH_DIR}/LOGIN_CMDS.sh
+
+echo "${indent}Sourcing functions"
+sourceFiles "${BASH_DIR}/FUNCTIONS"
+
+echo "${indent}Sourcing private extensions"
+sourceFiles "${BASH_DIR}/PRIVATE_BASH_EXTENSIONS"
+
+echo "${indent}Sourcing completion extensions"
+sourceFiles "${BASH_DIR}/COMPLETION"
+
+echo "${indent}Sourcing aliases"
+source ${BASH_DIR}/ALIASES.sh
+
+echo "${indent}Sourcing OS specific settings"
+source ${BASH_DIR}/OS_SPECIFIC_SETTINGS.sh
+
+echo "${indent}Sourcing bash prompt settings"
+source ${BASH_DIR}/PROMPT/PROMPT_SETTINGS.sh
+
+echo "${indent}Sourcing machine-specific settings"
+source ${BASH_DIR}/MACHINE_SPECIFIC_SETTINGS.sh
+
+################################################################################
+##
+## Display Login Info: 
+##
+################################################################################
+
+source ${BASH_DIR}/LOGIN_SCREEN.sh
+

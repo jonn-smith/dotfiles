@@ -1,0 +1,245 @@
+set nocompatible    " use vim defaults
+set tabstop=2       " numbers of spaces of tab character
+set shiftwidth=2    " numbers of spaces to (auto)indent
+set scrolloff=3     " keep 3 lines when scrolling
+set showcmd         " display incomplete commands
+set hlsearch        " highlight searches
+set incsearch       " do incremental searching
+set showmatch       " show matches as you search
+set ruler           " show the cursor position all the time
+set ignorecase      " ignore case when searching
+set title           " show title in console title bar
+set ttyfast         " smoother changes
+set nostartofline   " don't jump to first character when paging
+
+set backspace=indent,eol,start
+
+set autoindent      " always set autoindenting on
+set smartindent     " smart indent
+set cindent         " cindent
+set nowrap			    " no line wrap 
+set sm 				      " show matching braces
+"set expandtab       " tabs converted to spaces
+
+set number          " Line numbers on
+
+""Set VIM color scheme to be set to the 'console' colorscheme:
+"set background=dark
+"hi SpecialKey guifg=Blue
+"hi MoreMsg guifg=Green
+"hi Visual guifg=NONE guibg=NONE
+"hi Folded ctermbg=4 guibg=Blue
+"hi FoldColumn ctermbg=7
+"hi DiffAdd guibg=Blue
+"hi DiffChange guibg=Magenta
+"hi DiffDelete guibg=Cyan
+"hi Normal guifg=Gray guibg=Black
+"hi Cursor guibg=White
+"hi lCursor guibg=White
+"hi Comment guifg=Cyan
+"hi Constant guifg=Magenta
+"hi Special guifg=Red
+"hi Identifier guifg=Cyan
+"hi Statement guifg=Yellow
+"hi PreProc guifg=Blue
+"hi Type guifg=Green
+"hi Underlined guifg=Blue
+"hi Todo guifg=Black
+"hi StatusLine guifg=black guibg=gray
+
+""Turn on syntax highlighting:
+syntax on			" Syntax highlighting
+filetype plugin on
+filetype indent on
+
+""Make diff color settings not suck:
+highlight DiffAdd term=reverse cterm=bold ctermbg=green ctermfg=white
+highlight DiffChange term=reverse cterm=bold ctermbg=grey ctermfg=black
+highlight DiffText term=reverse cterm=bold ctermbg=cyan ctermfg=black
+highlight DiffDelete term=reverse cterm=bold ctermbg=red ctermfg=black
+
+""Custom Syntax files:
+"Bitbake:
+au BufRead,BufNewFile *.bb set filetype=bitbake
+au! Syntax bitbake source $HOME/vim/bitbake.vim
+
+"Change the comment color to be more readable:
+hi Comment ctermfg=blue
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""Taglist Plugin Settings""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"let Tlist_Auto_Open = 1
+let Tlist_WinWidth = 40
+let Tlist_Exit_OnlyWindow = 1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""KEY MAPPINGS"""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"Allow to paste into VIM
+nnoremap <F1> :set invpaste paste?<CR>
+set pastetoggle=<F1>
+set showmode
+
+"" Allow copying to/from OSX:
+"if has('macunix')
+"	nmap <C-c> :.w !pbcopy<CR><CR>
+"	vmap <C-c> :w !pbcopy<CR><CR>
+"	vmap <C-x> :!pbcopy<CR>
+"endif
+
+"Turn off highlighted characters:
+map <silent> <F2> :silent noh<CR>
+
+"Turn on and off line numbers:
+"set number          " show line numbers
+nmap <F3> :set number! number?<CR>
+
+"Switch between .h and .cpp files:
+map <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+
+"Map F8 to be switching open/closed the TagList window
+nnoremap <silent> <F8> :TlistToggle<CR>
+
+"Syntax on and off:
+:map <silent> <F5> :if exists("syntax_on") <Bar>
+  \   syntax off <Bar>
+  \ else <Bar>
+  \   syntax enable <Bar>
+  \ endif <CR>
+
+
+"Next and previous buffers:
+nnoremap <F6> :bp<CR>
+nnoremap <F7> :bn<CR>
+
+"next and previous tabs:
+nnoremap <F10> :tabprevious<CR> 
+nnoremap <F11> :tabnext<CR>
+"nnoremap <silent> <A-F10> :execute 'silent! tabmove' . (tabpagenr()-2)<CR>
+"nnoremap <silent> <A-F11> :execute 'silent! tabmove ' . tabpagenr()<CR>
+nmap <F12> :tabnew<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""Commands    """""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command WrapXML normal!gg<home>i<CR><WRAPPER><CR><CR><esc>G<end>i<right><CR><CR></WRAPPER><CR><esc>
+
+command TidyXML normal!:%!xmllint --format -<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""Functions   """""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""             HEX MODE STUFF           """"""""""""""""""""""""
+""""""""""""     Courtesy of: http://vim.wikia.com/wiki/Hex """"""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" ex command for toggling hex mode - define mapping if desired
+command -bar Hexmode call ToggleHex()
+
+" helper function to toggle hex mode
+function ToggleHex()
+  " hex mode should be considered a read-only operation
+  " save values for modified and read-only for restoration later,
+  " and clear the read-only flag for now
+  let l:modified=&mod
+  let l:oldreadonly=&readonly
+  let &readonly=0
+  let l:oldmodifiable=&modifiable
+  let &modifiable=1
+  if !exists("b:editHex") || !b:editHex
+    " save old options
+    let b:oldft=&ft
+    let b:oldbin=&bin
+    " set new options
+    setlocal binary " make sure it overrides any textwidth, etc.
+    let &ft="xxd"
+    " set status
+    let b:editHex=1
+    " switch to hex editor
+    %!xxd
+  else
+    " restore old options
+    let &ft=b:oldft
+    if !b:oldbin
+      setlocal nobinary
+    endif
+    " set status
+    let b:editHex=0
+    " return to normal editing
+    %!xxd -r
+  endif
+  " restore values for modified and read only state
+  let &mod=l:modified
+  let &readonly=l:oldreadonly
+  let &modifiable=l:oldmodifiable
+endfunction
+
+" vim -b : edit binary using xxd-format!
+augroup Binary
+  au!
+  au BufReadPre  *.bin let &bin=1
+  au BufReadPost *.bin if &bin | %!xxd
+  au BufReadPost *.bin set ft=xxd | endif
+  au BufWritePre *.bin if &bin | %!xxd -r
+  au BufWritePre *.bin endif
+  au BufWritePost *.bin if &bin | %!xxd
+  au BufWritePost *.bin set nomod | endif
+augroup END
+
+" autocmds to automatically enter hex mode and handle file writes properly
+if has("autocmd")
+  " vim -b : edit binary using xxd-format!
+  augroup Binary
+    au!
+
+    " set binary option for all binary files before reading them
+    au BufReadPre *.bin,*.hex setlocal binary
+
+    " if on a fresh read the buffer variable is already set, it's wrong
+    au BufReadPost *
+          \ if exists('b:editHex') && b:editHex |
+          \   let b:editHex = 0 |
+          \ endif
+
+    " convert to hex on startup for binary files automatically
+    au BufReadPost *
+          \ if &binary | Hexmode | endif
+
+    " When the text is freed, the next time the buffer is made active it will
+    " re-read the text and thus not match the correct mode, we will need to
+    " convert it again if the buffer is again loaded.
+    au BufUnload *
+          \ if getbufvar(expand("<afile>"), 'editHex') == 1 |
+          \   call setbufvar(expand("<afile>"), 'editHex', 0) |
+          \ endif
+
+    " before writing a file when editing in hex mode, convert back to non-hex
+    au BufWritePre *
+          \ if exists("b:editHex") && b:editHex && &binary |
+          \  let oldro=&ro | let &ro=0 |
+          \  let oldma=&ma | let &ma=1 |
+          \  silent exe "%!xxd -r" |
+          \  let &ma=oldma | let &ro=oldro |
+          \  unlet oldma | unlet oldro |
+          \ endif
+
+    " after writing a binary file, if we're in hex mode, restore hex mode
+    au BufWritePost *
+          \ if exists("b:editHex") && b:editHex && &binary |
+          \  let oldro=&ro | let &ro=0 |
+          \  let oldma=&ma | let &ma=1 |
+          \  silent exe "%!xxd" |
+          \  exe "set nomod" |
+          \  let &ma=oldma | let &ro=oldro |
+          \  unlet oldma | unlet oldro |
+          \ endif
+  augroup END
+endif
+

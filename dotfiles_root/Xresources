@@ -1,0 +1,8 @@
+XTerm*background: black
+XTerm*foreground: white
+XTerm*scrollBar: true
+XTerm*rightScrollBar: true
+XTerm*saveLines: 9999999
+XTerm*scrollbar*Foreground: white
+XTerm*scrollbar*Background: Gray75
+
