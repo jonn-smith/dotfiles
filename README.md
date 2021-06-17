@@ -16,15 +16,17 @@ You _*must*_ follow the steps in the installation section for these to work prop
 ## Platform / Support
 
 Everything here is desinged to work in Bourne Again Shell (BASH).
-If it doesn't work in your shell, I may or may not be able to support / help you.
+If it doesn't work in your shell, you're on your own (but most of it should be OK).
 
 I use both Mac and Linux computers.  Most of these contents will work for
 both systems.  Some don't.  I haven't labeled what will and won't work in 
 each.  Good luck.
 
-Note: *This repo requires `python` is installed and on your path.*
+Notes: 
+ - *To install this code, `python` must be installed and on your path.*
+ - Many features in this set of scripts rely on foundational programs to be installed (e.g. `mail`).  Some things won't work without their dependencies.  These dependencies are not documented.  
 
-## OBLIGATORY WARNING
+## OBLIGATORY HIGH-LEVEL WARNING
 **USE THIS REPOSITORY AT YOUR OWN PERIL!**
 
 **READ EVERYTHING BEFORE RUNNING ANY OF IT!**
@@ -53,9 +55,9 @@ subfolders within this repo (e.g. `dotfiles_root/FUNCTIONS`).
 I have opted for this level of automation so that I can easily script out 
 anthing I'm going to do more than twice.
 
-## WARNING
+## SECURITY WARNING
 
-The above description should sound dangerous to you.  This is somewhat dangerous.  By building
+The above description should sound dangerous to you.  This _is_ somewhat dangerous.  By building
 this repo in this manner I'm sacrificing some security for a lot of convenience.
 
 Be warned - using this setup makes you more vulnerable to certain attacks / nefarious 
@@ -91,7 +93,7 @@ There are other plugin folders and scripts that I will document at a later date.
    ```
 ## Highlighted Aliases
 
- - `getl` - Print the given line number from the given file.
+ - `getl` - Print the contents on the given line number from the given file.
  - `stats` - Print stats of a list of numbers supplied via `stdin`.
  - `gitpp` - `git pull && git push`
  - `saytify` - Speaks a message to the user based on the last command run using `say` (outputs audio via your computer's speakers; similar to `notify`).
